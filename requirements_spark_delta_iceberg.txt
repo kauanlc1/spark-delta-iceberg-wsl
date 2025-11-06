@@ -1,0 +1,14 @@
+# requirements_spark_delta_iceberg.txt
+
+pyspark==3.5.1
+delta-spark==3.1.0
+pyiceberg==0.6.1
+pandas
+jupyterlab
+mkdocs
+mkdocs-material
+boto3
+minio
+notebook
+requests
+pyarrow
