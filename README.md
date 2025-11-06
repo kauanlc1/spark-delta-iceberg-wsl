@@ -1,9 +1,9 @@
 # 🧩 Projeto: Apache Spark com Delta Lake e Apache Iceberg
 
-> Trabalho de Engenharia de Dados — UniSatc
-> Professor: Jorge Silva  
-> Alunos: Kauan Laureano Cândido e Lucas Ribeiro Guidi
-> Tema: Implementação prática de um pipeline de dados com Apache Spark, Delta Lake e Apache Iceberg utilizando Arquitetura Medalhão.
+> **Trabalho de Engenharia de Dados** — UniSatc  
+> **Professor:** Jorge Silva  
+> **Alunos:** Kauan Laureano Cândido e Lucas Ribeiro Guidi  
+> **Tema:** Implementação prática de um pipeline de dados com Apache Spark, Delta Lake e Apache Iceberg utilizando Arquitetura Medalhão.
 
 ---
 
@@ -164,3 +164,11 @@ pip install mkdocs mkdocs-material
 mkdocs serve
 ```
 Acesse em http://127.0.0.1:8000.
+
+9️⃣ Referências
+
+- [Delta Lake Official Docs](https://delta.io/)
+- [Apache Iceberg Docs](https://iceberg.apache.org/)
+- [Apache Spark Docs](https://spark.apache.org/docs/latest/)
+- [MinIO Documentation](https://min.io/docs/)
+- [DataWay BR (YouTube)](https://www.youtube.com/@DataWayBR)
