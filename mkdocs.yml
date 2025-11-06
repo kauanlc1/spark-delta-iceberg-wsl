@@ -1,0 +1,20 @@
+site_name: Projeto Spark Delta Iceberg WSL
+site_url: https://github.com/kauanlc1/spark-delta-iceberg-wsl
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Delta Lake: delta.md
+  - Apache Iceberg: iceberg.md
+  - Referências: referencias.md
+site_name: Projeto Apache Spark com Delta Lake e Apache Iceberg
+site_url: https://seulinkdoprojeto.com
+theme:
+  name: 'material'
+nav:
+  - Home: 'index.md'
+  - Delta Lake: 'delta.md'
+  - Iceberg: 'iceberg.md'
+  - Referências: 'referencias.md'

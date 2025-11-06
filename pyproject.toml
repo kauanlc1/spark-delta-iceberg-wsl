@@ -1,0 +1,23 @@
+[project]
+name = "spark-delta-iceberg-wsl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "kauanlc1", email = "kauanlc@hotmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "delta-spark==3.1.0",
+    "jupyterlab>=4.4.10",
+    "pandas>=2.3.3",
+    "pyiceberg==0.6.1",
+    "pyspark==3.5.1",
+]
+
+[project.scripts]
+spark-delta-iceberg-wsl = "spark_delta_iceberg_wsl:main"
+
+[build-system]
+requires = ["uv_build>=0.9.7,<0.10.0"]
+build-backend = "uv_build"
