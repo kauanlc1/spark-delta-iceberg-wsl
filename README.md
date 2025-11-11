@@ -15,6 +15,7 @@
 - [4️⃣ Estrutura do Projeto](#4️⃣-estrutura-do-projeto)
 - [5️⃣ Como Reproduzir o Ambiente no WSL](#5️⃣-como-reproduzir-o-ambiente-no-wsl)
 - [6️⃣ Notebooks e Camadas](#6️⃣-notebooks-e-camadas)
+- [6️⃣.1 DB to Landing](#61-db-to-landing)
 - [7️⃣ Integração com o Databricks](#7️⃣-integração-com-o-databricks)
 - [8️⃣ Documentação (MKDocs)](#8️⃣-documentação-mkdocs)
 - [9️⃣ Referências](#9️⃣-referências)
@@ -36,25 +37,28 @@ O projeto tem como foco:
 ## 2️⃣ Arquitetura Geral
 
 ```text
-+----------------+      +----------------+      +----------------+      +----------------+
-|    Landing     | ---> |     Bronze     | ---> |     Silver     | ---> |      Gold      |
-| Dados Brutos   |      | Dados Dedup.   |      | Dados Limpos   |      | Dados Agreg.   |
-+----------------+      +----------------+      +----------------+      +----------------+
-        |                       |                       |                       |
-        ▼                       ▼                       ▼                       ▼
-   CSV/JSON Local          Delta Lake (MinIO)       Delta Lake (MinIO)       Delta Lake (MinIO)
++------------------+      +----------------+      +----------------+      +----------------+      +----------------+
+| DB to Landing    | ---> |    Landing     | ---> |     Bronze     | ---> |     Silver     | ---> |      Gold      |
+| Extração de Dados|      | Dados Brutos   |      | Dados Dedup.   |      | Dados Limpos   |      | Dados Agreg.   |
++------------------+      +----------------+      +----------------+      +----------------+      +----------------+
+        |                       |                       |                       |                       |
+        ▼                       ▼                       ▼                       ▼                       ▼
+  Aurora/RDS AWS        CSV/JSON Local          Delta Lake (MinIO)       Delta Lake (MinIO)       Delta Lake (MinIO)
 ```
 ## 3️⃣ Tecnologias Utilizadas
-Tecnologia	Função
-Python 3.12	Linguagem principal (PySpark)
-Apache Spark 3.5.1	Motor de processamento distribuído
-Delta Lake 3.1.0	Formato de tabela ACID
-Apache Iceberg 1.5.2	Formato de tabela otimizado e evolutivo
-MinIO	Armazenamento local compatível com S3
-Docker	Execução isolada do MinIO
-JupyterLab	Execução interativa dos notebooks
-MKDocs + Material Theme	Documentação técnica
-Databricks	Execução orquestrada em cloud (Jobs e Pipelines)
+
+| **Tecnologia**        | **Função**                                                   |
+|-----------------------|--------------------------------------------------------------|
+| **Python 3.12**       | Linguagem principal (PySpark)                                |
+| **Apache Spark 3.5.1**| Motor de processamento distribuído                           |
+| **Delta Lake 3.1.0**  | Formato de tabela ACID                                       |
+| **Apache Iceberg 1.5.2**| Formato de tabela otimizado e evolutivo                      |
+| **MinIO**             | Armazenamento local compatível com S3                        |
+| **Docker**            | Execução isolada do MinIO                                    |
+| **JupyterLab**        | Execução interativa dos notebooks                            |
+| **MKDocs + Material Theme**| Documentação técnica                                     |
+| **Databricks**        | Execução orquestrada em cloud (Jobs e Pipelines)             |
+| **Amazon Aurora/RDS**   | Banco de dados relacional gerenciado pela AWS, utilizado para extração de dados na camada DB to Landing |
 
 ## 4️⃣ Estrutura do Projeto
 ```
@@ -65,6 +69,7 @@ spark-delta-iceberg-wsl/
 │   └── landing/
 │       └── vendas.csv
 ├── notebooks/
+|   ├── 00_db_to_landing.ipynb
 │   ├── 01_landing_to_bronze.ipynb
 │   ├── 02_bronze_to_silver.ipynb
 │   ├── 03_silver_to_gold.ipynb
@@ -132,31 +137,75 @@ docker run --rm -it --network host \
   -e MC_HOST_local="http://${MINIO_ROOT_USER}:${MINIO_ROOT_PASSWORD}@127.0.0.1:9000" \
   quay.io/minio/mc mb local/datalake
   ```
-  
+
 ## 6️⃣ Notebooks e Camadas
 
-| **Camada**      | **Notebook**                        | **Descrição**                                           |
-|-----------------|-------------------------------------|---------------------------------------------------------|
+| **Camada**        | **Notebook**                        | **Descrição**                                           |
+|-------------------|-------------------------------------|---------------------------------------------------------|
+| **DB to Landing** | `05_db_to_landing.ipynb`            | Extração de dados de Aurora/RDS AWS para Landing        |
 | **Landing → Bronze**  | `01_landing_to_bronze.ipynb`      | Lê CSV bruto e grava em Delta Lake                     |
 | **Bronze → Silver**   | `02_bronze_to_silver.ipynb`      | Limpeza e transformação (tipos e deduplicação)          |
 | **Silver → Gold**     | `03_silver_to_gold.ipynb`        | Agregação por estado                                   |
 | **DML Delta/Iceberg** | `04_delta_vs_iceberg_dml.ipynb` | Comandos INSERT, UPDATE e DELETE                        |
 
+## 6️⃣.1 DB to Landing
+
+A camada **DB to Landing** foi implementada para **extrair dados diretamente de uma instância Amazon Aurora/RDS** e armazená-los em um formato adequado para o pipeline. Utilizamos **PySpark** para conectar ao banco de dados e realizar a extração dos dados brutos, que são armazenados no formato CSV/JSON na camada **Landing**.
+
+- **Fonte de Dados**: Banco de Dados **Amazon Aurora/RDS**.
+- **Tecnologias Utilizadas**: **PySpark**, **JDBC** para conexão com o banco.
+- **Processo**: Conexão com o banco de dados AWS → Extração de dados → Armazenamento em CSV/JSON na camada **Landing**.
+
+### Exemplo de Conexão e Extração de Dados:
+
+```python
+from pyspark.sql import SparkSession
+
+# Criação da Spark Session
+spark = SparkSession.builder \
+    .appName("DB to Landing") \
+    .getOrCreate()
+
+# Configuração da conexão JDBC com o Aurora/RDS
+jdbc_url = "jdbc:mysql://<rds-endpoint>:3306/<db-name>"
+properties = {
+    "user": "<username>",
+    "password": "<password>",
+    "driver": "com.mysql.cj.jdbc.Driver"
+}
+
+# Extração de dados da tabela
+df = spark.read.jdbc(url=jdbc_url, table="<tabela>", properties=properties)
+
+# Armazenando os dados extraídos na camada Landing
+df.write.csv("data/landing/dados_extraidos.csv", header=True)
+```
 
 ## 7️⃣ Integração com o Databricks
-- No menu lateral do Databricks → Repos → Add Repo
-- Selecione GitHub e cole a URL deste repositório.
-- Autorize o acesso via OAuth.
-- Crie um Cluster (DBR 14.x LTS).
-- Execute cada notebook na seguinte ordem:
 
-01_landing_to_bronze
-02_bronze_to_silver
-03_silver_to_gold
+1. **Adicionar repositório no Databricks**:
+   - No menu lateral do Databricks, vá até **Repos** → **Add Repo**.
+   - Selecione **GitHub** e cole a URL deste repositório.
+   - Autorize o acesso via **OAuth**.
 
-- Em Workflows → Jobs, crie um job com as 3 tarefas em sequência.
-- (Opcional) Monte um Pipeline Delta Live Tables usando os mesmos notebooks.
-- (Lembrete) Certifique-se de configurar o Databricks workspace corretamente e adicionar os notebooks a partir do repositório GitHub, antes de rodar os Jobs
+2. **Criar um Cluster**:
+   - Crie um Cluster com a versão **DBR 14.x LTS**.
+
+3. **Executar os Notebooks**:
+   - Execute os notebooks na seguinte ordem:
+     1. `00_db_to_landing.ipynb`
+     2. `01_landing_to_bronze.ipynb`
+     3. `02_bronze_to_silver.ipynb`
+     4. `03_silver_to_gold.ipynb`
+
+4. **Criar Job em Databricks**:
+   - Em **Workflows → Jobs**, crie um **job** com as 3 tarefas em sequência.
+
+5. **(Opcional) Configuração de Pipeline Delta Live Tables**:
+   - Você pode montar um **Pipeline Delta Live Tables** utilizando os mesmos notebooks.
+
+6. **Lembrete Importante**:
+   - Certifique-se de **configurar corretamente o Databricks workspace** e adicionar os notebooks a partir do repositório GitHub antes de rodar os Jobs.
 
 ## 8️⃣ Documentação (MKDocs)
 🧩 Instalação e execução local
