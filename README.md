@@ -44,7 +44,7 @@ O projeto tem como foco:
         ▼                       ▼                       ▼                       ▼
    CSV/JSON Local          Delta Lake (MinIO)       Delta Lake (MinIO)       Delta Lake (MinIO)
 ```
-3️⃣ Tecnologias Utilizadas
+## 3️⃣ Tecnologias Utilizadas
 Tecnologia	Função
 Python 3.12	Linguagem principal (PySpark)
 Apache Spark 3.5.1	Motor de processamento distribuído
@@ -56,7 +56,7 @@ JupyterLab	Execução interativa dos notebooks
 MKDocs + Material Theme	Documentação técnica
 Databricks	Execução orquestrada em cloud (Jobs e Pipelines)
 
-4️⃣ Estrutura do Projeto
+## 4️⃣ Estrutura do Projeto
 ```
 spark-delta-iceberg-wsl/
 ├── src/
@@ -77,7 +77,7 @@ spark-delta-iceberg-wsl/
 ├── pyproject.toml
 └── README.md
 ```
-5️⃣ Como Reproduzir o Ambiente no WSL
+## 5️⃣ Como Reproduzir o Ambiente no WSL
 🔹 Atualizar e instalar dependências básicas
 ```
 sudo apt update && sudo apt -y upgrade
@@ -133,16 +133,17 @@ docker run --rm -it --network host \
   quay.io/minio/mc mb local/datalake
   ```
   
-6️⃣ Notebooks e Camadas
-```
-Camada	Notebook	Descrição
-Landing → Bronze	01_landing_to_bronze.ipynb	Lê CSV bruto e grava em Delta Lake
-Bronze → Silver	02_bronze_to_silver.ipynb	Limpeza e transformação (tipos e deduplicação)
-Silver → Gold	03_silver_to_gold.ipynb	Agregação por estado
-DML Delta/Iceberg	04_delta_vs_iceberg_dml.ipynb	Comandos INSERT, UPDATE e DELETE
-```
+## 6️⃣ Notebooks e Camadas
 
-7️⃣ Integração com o Databricks
+| **Camada**      | **Notebook**                        | **Descrição**                                           |
+|-----------------|-------------------------------------|---------------------------------------------------------|
+| **Landing → Bronze**  | `01_landing_to_bronze.ipynb`      | Lê CSV bruto e grava em Delta Lake                     |
+| **Bronze → Silver**   | `02_bronze_to_silver.ipynb`      | Limpeza e transformação (tipos e deduplicação)          |
+| **Silver → Gold**     | `03_silver_to_gold.ipynb`        | Agregação por estado                                   |
+| **DML Delta/Iceberg** | `04_delta_vs_iceberg_dml.ipynb` | Comandos INSERT, UPDATE e DELETE                        |
+
+
+## 7️⃣ Integração com o Databricks
 - No menu lateral do Databricks → Repos → Add Repo
 - Selecione GitHub e cole a URL deste repositório.
 - Autorize o acesso via OAuth.
@@ -157,7 +158,7 @@ DML Delta/Iceberg	04_delta_vs_iceberg_dml.ipynb	Comandos INSERT, UPDATE e DELETE
 - (Opcional) Monte um Pipeline Delta Live Tables usando os mesmos notebooks.
 - (Lembrete) Certifique-se de configurar o Databricks workspace corretamente e adicionar os notebooks a partir do repositório GitHub, antes de rodar os Jobs
 
-8️⃣ Documentação (MKDocs)
+## 8️⃣ Documentação (MKDocs)
 🧩 Instalação e execução local
 ```
 pip install mkdocs mkdocs-material
@@ -165,7 +166,7 @@ mkdocs serve
 ```
 Acesse em http://127.0.0.1:8000.
 
-9️⃣ Referências
+## 9️⃣ Referências
 
 - [Delta Lake Official Docs](https://delta.io/)
 - [Apache Iceberg Docs](https://iceberg.apache.org/)
