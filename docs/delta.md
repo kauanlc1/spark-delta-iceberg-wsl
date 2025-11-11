@@ -1,18 +1,24 @@
 # Delta Lake
 
-O **Delta Lake** é um formato de armazenamento de dados otimizado para o Apache Spark. Ele proporciona transações ACID (Atomicidade, Consistência, Isolamento e Durabilidade) em ambientes de grandes volumes de dados. Delta Lake permite a construção de Data Lakes com alta confiabilidade e flexibilidade.
+**Delta Lake** é um formato de armazenamento de dados otimizado para o **Apache Spark**. Ele adiciona garantias de **transações ACID** (Atomicidade, Consistência, Isolamento e Durabilidade) a sistemas de Big Data, possibilitando que as operações sobre grandes volumes de dados sejam mais seguras e eficientes. Com o **Delta Lake**, é possível criar Data Lakes robustos e com alta confiabilidade.
 
 ## Funcionalidades
 
-- **Transações ACID**: Garantia de integridade e consistência.
-- **Versionamento de Dados**: Histórico de versões dos dados, permitindo rollback e auditoria.
-- **Schema Enforcement e Evolution**: Controle do esquema de dados.
+### Transações ACID
+O Delta Lake oferece transações de leitura e escrita em tempo real, garantindo que todas as operações de dados sigam os princípios ACID.
 
-Para mais detalhes sobre como utilizar Delta Lake, veja a documentação oficial: [Delta Lake Documentation](https://docs.delta.io/latest/index.html).
-# Delta Lake
+### Versionamento de Dados
+Delta Lake mantém um histórico completo de todas as alterações de dados. Isso permite a execução de consultas em versões anteriores dos dados (conhecido como **Time Travel**) e oferece a capacidade de realizar rollback em transações.
 
-O **Delta Lake** é um **formato de tabela ACID** para **Apache Spark**. Ele garante **transações seguras** em grandes volumes de dados e permite **escrever, ler e atualizar dados de forma eficiente**.
+### Schema Enforcement e Evolution
+O Delta Lake permite validar o esquema dos dados para garantir que eles atendam a um formato pré-definido e, ao mesmo tempo, suporta a evolução do esquema ao longo do tempo, sem interromper os processos de ingestão de dados.
 
-- Garantias ACID (Atomicidade, Consistência, Isolamento, Durabilidade)
-- Suporte a **schema evolution**
-- **Time Travel** para consultar dados em versões anteriores
+## Benefícios
+
+- **Alta confiabilidade** com suporte a transações ACID.
+- **Fácil integração** com Apache Spark.
+- **Escalabilidade**: Suporta grandes volumes de dados distribuídos.
+- **Ajuste dinâmico de esquemas**: Suporta mudanças nos dados com o tempo.
+- **Capacidade de voltar no tempo** com o Time Travel.
+
+Para mais detalhes sobre como utilizar o Delta Lake, veja a documentação oficial: [Delta Lake Documentation](https://docs.delta.io/latest/index.html).
