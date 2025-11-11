@@ -15,7 +15,7 @@
 - [4️⃣ Estrutura do Projeto](#4️⃣-estrutura-do-projeto)
 - [5️⃣ Como Reproduzir o Ambiente no WSL](#5️⃣-como-reproduzir-o-ambiente-no-wsl)
 - [6️⃣ Notebooks e Camadas](#6️⃣-notebooks-e-camadas)
-- [6️⃣.1 DB to Landing](#61-db-to-landing)
+- [6️⃣.1 DB to Landing](#6️⃣1-db-to-landing)
 - [7️⃣ Integração com o Databricks](#7️⃣-integração-com-o-databricks)
 - [8️⃣ Documentação (MKDocs)](#8️⃣-documentação-mkdocs)
 - [9️⃣ Referências](#9️⃣-referências)
