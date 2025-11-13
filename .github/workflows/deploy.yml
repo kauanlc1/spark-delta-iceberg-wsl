@@ -35,3 +35,4 @@ jobs:
         folder: site
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+        DEPLOY_TOKEN: ${{ secrets.wsl-project-2  }}
