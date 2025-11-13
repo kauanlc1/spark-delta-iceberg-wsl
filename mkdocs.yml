@@ -1,9 +1,6 @@
 site_name: Projeto Spark Delta Iceberg WSL
 site_url: https://github.com/kauanlc1/spark-delta-iceberg-wsl
 
-theme:
-  name: material
-
 nav:
   - Home: index.md
   - Delta Lake: delta.md
