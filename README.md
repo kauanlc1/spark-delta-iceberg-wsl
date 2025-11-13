@@ -216,7 +216,7 @@ mkdocs serve
 Acesse em http://127.0.0.1:8000.
 
 ## 9️⃣ Referências
-
+ 
 - [Delta Lake Official Docs](https://delta.io/)
 - [Apache Iceberg Docs](https://iceberg.apache.org/)
 - [Apache Spark Docs](https://spark.apache.org/docs/latest/)
