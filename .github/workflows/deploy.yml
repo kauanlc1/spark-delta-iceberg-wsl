@@ -34,4 +34,4 @@ jobs:
         branch: gh-pages
         folder: site
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
